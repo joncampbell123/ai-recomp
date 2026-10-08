@@ -1,0 +1,11 @@
+Typical installation location: C:\WINDOWS\SYSTEM\MSVIDC.DRV
+
+------------------------------------------------------
+
+Installation entry in SYSTEM.INI:
+
+[drivers]
+VIDC.MSVC=msvidc.drv
+
+------------------------------------------------------
+

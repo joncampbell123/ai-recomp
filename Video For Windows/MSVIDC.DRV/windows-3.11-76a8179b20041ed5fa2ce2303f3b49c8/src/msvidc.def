@@ -1,0 +1,34 @@
+; msvidc.def - reconstructed from the NE header of MSVIDC.DRV
+;
+; Segment order and attributes as in the binary:
+;   seg1 CODE  MOVEABLE PRELOAD DISCARDABLE   0x0CA4  drvproc.c (+ LibEntry)
+;   seg2 CODE  MOVEABLE DISCARDABLE USE32     0x1E84  dec386 (386 decompressors)
+;   seg3 CODE  MOVEABLE DISCARDABLE           0x4BC9  compress.c decomp.c invcmap.c encode.c + C runtime
+;   seg4 CODE  MOVEABLE DISCARDABLE           0x051C  dec286 (16-bit decompressors)
+;   seg5 DATA  MOVEABLE PRELOAD SINGLE        0x182B  DGROUP, local heap 0x80, no stack
+
+LIBRARY     MSVIDC
+DESCRIPTION 'VIDC.MSVC:Microsoft Video 1 Compressor'
+EXETYPE     WINDOWS 3.1
+STUB        'WINSTUB.EXE'
+
+CODE        MOVEABLE DISCARDABLE
+DATA        MOVEABLE SINGLE PRELOAD
+HEAPSIZE    128
+
+EXPORTS
+    WEP                 @1 RESIDENTNAME
+    DriverProc          @2 RESIDENTNAME
+    ___EXPORTEDSTUB     @3 RESIDENTNAME     ; from the Microsoft C runtime
+
+IMPORTS
+    ; all imports are by ordinal in the binary
+    ; WIN87EM.1   __FPMATH
+    ; KERNEL.1 FatalExit, 4 LocalInit, 5 LocalAlloc, 7 LocalFree, 15 GlobalAlloc,
+    ;   17 GlobalFree, 18 GlobalLock, 19 GlobalUnlock, 21 GlobalHandle,
+    ;   58 GetProfileString, 113 __AHSHIFT, 114 __AHINCR, 132 GetWinFlags,
+    ;   137 FatalAppExit, 348 hmemcpy
+    ; USER.1 MessageBox, 6 PostQuitMessage, 62 SetScrollPos, 63 GetScrollPos,
+    ;   64 SetScrollRange, 88 EndDialog, 91 GetDlgItem, 92 SetDlgItemText,
+    ;   176 LoadString, 239 DialogBoxParam, 255 DefDriverProc, 420 wsprintf
+    ; GDI.128 MulDiv

@@ -1,0 +1,46 @@
+# msvidc.lnk - wlink directives for the Open Watcom build of MSVIDC.DRV
+#
+# Code segments follow the original NE layout (see ../msvidc.def):
+#   SEG1_TEXT  drvproc.c + libmain.c             PRELOAD
+#   SEG2_TEXT  dec386.c   (originally USE32 assembly)
+#   SEG3_TEXT  compress.c decomp.c invcmap.c encode.c compat.c
+#   SEG4_TEXT  dec286.c   (originally 16-bit assembly)
+# The Watcom runtime helpers land in segments of their own.
+
+format windows dll
+option osname='Windows 16-bit'
+option modname=MSVIDC
+option description 'VIDC.MSVC:Microsoft Video 1 Compressor'
+option heapsize=128
+option map=out/msvidc.map
+option resource=out/msvidc.res
+option quiet
+
+name out/msvidc.drv
+
+libpath %WATCOM%/lib286
+libpath %WATCOM%/lib286/win
+library windows
+library clibm
+library math87m
+library emu87
+
+segment class 'CODE' loadoncall moveable discardable
+segment SEG1_TEXT preload moveable discardable
+segment _TEXT preload moveable discardable
+segment class 'DATA' preload moveable
+
+export WEP.1 resident
+export DRIVERPROC.2 resident
+
+libfile libentry.obj
+file out/libmain.obj
+file out/drvproc.obj
+file out/dec386.obj
+file out/compress.obj
+file out/decomp.obj
+file out/invcmap.obj
+file out/encode.obj
+file out/compat.obj
+file out/dec286.obj
+file out/data.obj
