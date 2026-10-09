@@ -1,0 +1,40 @@
+# msadpcm.lnk - wlink directives for the Open Watcom build of MSADPCM.ACM
+#
+# Code segments follow the original NE layout (see ../msadpcm.def):
+#   SEG1_TEXT  init.c                            PRELOAD
+#   SEG2_TEXT  codec.c                           PRELOAD
+#   SEG3_TEXT  msadpcm.c
+#   SEG4_TEXT  adpcm386.c (originally 386 assembly)
+# The Watcom runtime helpers land in segments of their own.
+
+format windows dll
+option modname=MSADPCM
+option version=3.10                 # NE expected Windows version, as in the original
+option protmode
+option description 'MSACM.msadpcm:Microsoft ADPCM Audio CODEC'
+option heapsize=4096
+option map=out/msadpcm.map
+option resource=out/msadpcm.res
+option quiet
+
+name out/msadpcm.acm
+
+libpath %WATCOM%/lib286
+libpath %WATCOM%/lib286/win
+library windows
+library clibm
+
+segment class 'CODE' loadoncall moveable discardable
+segment SEG1_TEXT preload moveable discardable
+segment SEG2_TEXT preload moveable discardable
+segment _TEXT preload moveable discardable
+segment class 'DATA' preload moveable
+
+export WEP.1 resident
+export DRIVERPROC.2 resident
+
+libfile libentry.obj
+file out/init.obj
+file out/codec.obj
+file out/msadpcm.obj
+file out/adpcm386.obj

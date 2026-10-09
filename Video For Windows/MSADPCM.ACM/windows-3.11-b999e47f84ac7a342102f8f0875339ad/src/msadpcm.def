@@ -1,0 +1,39 @@
+; msadpcm.def - reconstructed from the NE header of MSADPCM.ACM
+;
+; Segment order and attributes as in the binary:
+;   seg1 CODE  MOVEABLE PRELOAD DISCARDABLE   0x0092  init.c (+ LibEntry)
+;   seg2 CODE  MOVEABLE PRELOAD DISCARDABLE   0x166E  codec.c + C runtime
+;   seg3 CODE  MOVEABLE DISCARDABLE           0x099F  msadpcm.c
+;   seg4 CODE  MOVEABLE DISCARDABLE           0x12AF  adpcm386 (assembly, no relocations)
+;   seg5 DATA  MOVEABLE PRELOAD SINGLE        0x01B4  DGROUP, local heap 0x1000, no stack
+;
+; The NE header says protected mode only, Windows 3.10, with a fast-load
+; area.  The DOS stub prints "This program requires Microsoft Windows."
+
+LIBRARY     MSADPCM
+DESCRIPTION 'MSACM.msadpcm:Microsoft ADPCM Audio CODEC'
+EXETYPE     WINDOWS 3.1
+PROTMODE
+STUB        'WINSTUB.EXE'
+
+CODE        MOVEABLE DISCARDABLE LOADONCALL
+DATA        MOVEABLE SINGLE PRELOAD
+HEAPSIZE    4096
+
+EXPORTS
+    WEP                 @1 RESIDENTNAME
+    DriverProc          @2 RESIDENTNAME
+    ___EXPORTEDSTUB     @3 RESIDENTNAME     ; from the Microsoft C runtime
+
+IMPORTS
+    ; all imports are by ordinal in the binary
+    ; used by the driver:
+    ;   KERNEL.4 LocalInit, 5 LocalAlloc, 7 LocalFree, 15 GlobalAlloc,
+    ;   17 GlobalFree, 18 GlobalLock, 113 __AHSHIFT, 114 __AHINCR, 348 hmemcpy
+    ;   USER.176 LoadString, 255 DefDriverProc
+    ; used by the stubs in front of the two LibEntry routines:
+    ;   KERNEL.48 GetModuleUsage, 91 InitTask, 178 __WINFLAGS
+    ; used only by the C runtime:
+    ;   KERNEL.1 FatalExit, 3 GetVersion, 6 LocalReAlloc, 10 LocalSize,
+    ;   16 GlobalReAlloc, 20 GlobalSize, 23 LockSegment, 24 UnlockSegment,
+    ;   102 DOS3Call, 131 GetDOSEnvironment, 137 FatalAppExit

@@ -1,0 +1,48 @@
+/*
+ * msadpcm.rc - resources reconstructed from MSADPCM.ACM
+ * (RT_STRING block 1, RT_VERSION 1)
+ */
+
+#include <windows.h>
+#include <ver.h>
+#include "msadpcm.h"
+
+/* there is no string 4 (IDS_ACM_DRIVER_LICENSING) */
+STRINGTABLE
+BEGIN
+    IDS_ACM_DRIVER_SHORTNAME,   "MS-ADPCM"
+    IDS_ACM_DRIVER_LONGNAME,    "Microsoft ADPCM CODEC"
+    IDS_ACM_DRIVER_COPYRIGHT,   "Copyright \251 1992-1993 Microsoft Corporation"
+    IDS_ACM_DRIVER_FEATURES,    "Compresses and decompresses Microsoft ADPCM audio data."
+    IDS_ACM_DRIVER_TAG_NAME,    "Microsoft ADPCM"
+END
+
+/* VS_FIXEDFILEINFO in the binary has dwFileFlagsMask = 0x0030003F */
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     2,1,0,175
+PRODUCTVERSION  2,1,0,175
+FILEFLAGSMASK   0x0030003FL
+FILEFLAGS       0
+FILEOS          VOS_DOS_WINDOWS16
+FILETYPE        VFT_DRV
+FILESUBTYPE     VFT2_DRV_INSTALLABLE
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",        "Microsoft Corporation\0"
+            VALUE "FileDescription",    "Microsoft ADPCM CODEC V2.00\0"
+            VALUE "FileVersion",        "2.01\0"
+            VALUE "InternalName",       "msadpcm.acm\0"
+            VALUE "LegalCopyright",     "Copyright \251 Microsoft Corp. 1992-1993\0"
+            VALUE "OriginalFilename",   "msadpcm.acm\0"
+            VALUE "ProductName",        "Microsoft Audio Compression Manager\0"
+            VALUE "ProductVersion",     "2.01\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 0x04E4
+    END
+END
