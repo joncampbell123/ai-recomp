@@ -1,0 +1,29 @@
+# sources.txt - source files of VIDCAP.EXE with their code segment, in the
+# order of the original (see ../vidcap.def).  Extra compiler options may
+# follow the segment.
+misc.c      SEG1_TEXT
+intro.c     SEG1_TEXT
+path.c      SEG1_TEXT
+arrow.c     SEG1_TEXT
+vidcap.c    SEG1_TEXT
+dosutil.c   SEG1_TEXT
+video.c     SEG1_TEXT
+file.c      SEG1_TEXT
+util.c      SEG1_TEXT
+muldiv.c    SEG1_TEXT
+data.c      SEG1_TEXT
+profile.c   SEG2_TEXT
+help.c      SEG2_TEXT
+init.c      SEG2_TEXT
+frame.c     SEG3_TEXT
+show.c      SEG3_TEXT
+ctrl.c      SEG3_TEXT
+toolbar.c   SEG3_TEXT
+arrowini.c  SEG4_TEXT
+dialogs.c   SEG5_TEXT
+dibmap.c    SEG6_TEXT  -zfp -zgp
+capavi.c    SEG7_TEXT
+status.c    SEG7_TEXT
+capframe.c  SEG8_TEXT
+mcicap.c    SEG8_TEXT
+average.c   SEG8_TEXT

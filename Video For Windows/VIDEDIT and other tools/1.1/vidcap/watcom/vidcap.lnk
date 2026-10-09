@@ -1,0 +1,73 @@
+# vidcap.lnk - wlink directives for the Open Watcom build of VIDCAP.EXE
+#
+# Code segments follow the original NE layout (see ../vidcap.def and
+# sources.txt): seg1-3 preloaded, seg4-8 load on call, all discardable.
+# The Watcom runtime takes the place of the Microsoft C runtime in seg1.
+# out/files.lnk (written by build.sh) has the object files.
+
+system windows
+option modname=VIDCAP
+option description 'Video Capture app'
+option version=3.10
+option protmode
+option stack=8192
+option heapsize=4096
+option map=out/vidcap.map
+option resource=out/vidcap.res
+option quiet
+option packcode=0
+
+name out/vidcap.exe
+
+segment class 'CODE' moveable discardable
+segment SEG1_TEXT preload
+segment SEG2_TEXT preload
+segment SEG3_TEXT preload
+segment class 'DATA' preload moveable
+
+export SETFILEDLGHOOK.1 resident
+export CAPPALDLGPROC.2 resident
+export STATUSWNDPROC.3 resident
+export EDITWNDPROC.4 resident
+export ARROWCONTROLPROC.5 resident
+export TOOLBARWNDPROC.6 resident
+export SHOWWNDPROC.7 resident
+export HELPMSGFILTER.8 resident
+export RLMETERPROC.9 resident
+export CTRLWNDPROC.10 resident
+export FNTEXT.12 resident
+export INTROWNDPROC.13 resident
+export CAPFRAMEDLGPROC.14 resident
+
+library commdlg
+library mmsystem
+
+import VIDEOGETERRORTEXT MSVIDEO.21
+import VIDEOOPEN MSVIDEO.28
+import VIDEOCLOSE MSVIDEO.29
+import VIDEODIALOG MSVIDEO.30
+import VIDEOFRAME MSVIDEO.31
+import VIDEOCONFIGURE MSVIDEO.32
+import VIDEOGETCHANNELCAPS MSVIDEO.34
+import VIDEOUPDATE MSVIDEO.35
+import VIDEOSTREAMADDBUFFER MSVIDEO.40
+import VIDEOSTREAMFINI MSVIDEO.41
+import VIDEOSTREAMGETERROR MSVIDEO.42
+import VIDEOSTREAMINIT MSVIDEO.44
+import VIDEOSTREAMPREPAREHEADER MSVIDEO.46
+import VIDEOSTREAMRESET MSVIDEO.47
+import VIDEOSTREAMSTART MSVIDEO.49
+import VIDEOSTREAMSTOP MSVIDEO.50
+import VIDEOSTREAMUNPREPAREHEADER MSVIDEO.51
+import VIDEOMESSAGE MSVIDEO.60
+import DRAWDIBOPEN MSVIDEO.102
+import DRAWDIBCLOSE MSVIDEO.103
+import DRAWDIBDRAW MSVIDEO.106
+import DRAWDIBGETPALETTE MSVIDEO.108
+import DRAWDIBREALIZE MSVIDEO.112
+import ICIMAGEDECOMPRESS MSVIDEO.241
+import ICCOMPRESSORCHOOSE MSVIDEO.242
+import ICCOMPRESSORFREE MSVIDEO.243
+import ICSEQCOMPRESSFRAMESTART MSVIDEO.244
+import ICSEQCOMPRESSFRAMEEND MSVIDEO.245
+import ICSEQCOMPRESSFRAME MSVIDEO.246

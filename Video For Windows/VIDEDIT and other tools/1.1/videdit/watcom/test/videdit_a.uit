@@ -1,0 +1,149 @@
+# videdit_a.uit - uitest script for VIDEDIT.EXE, part A (see ../../../common/watcom/uitest/uitest.c)
+#
+# Needs C:\TEST\TEST8.AVI made by mkavi.py (30 uncompressed 8-bit frames
+# with PCM audio, all key frames, so every frame shown is deterministic).
+# Preferences, Go To, Set Selection, Copy/Cut/Paste, zoom, Convert Frame
+# Rate, Statistics, Resize, Crop, and the save prompt on exit.
+iniset mmtools.ini VidEdit - -
+run C:\TEST\VIDEDIT.EXE C:\TEST\TEST8.AVI
+win VidEdit * 15000
+wait 3000
+dump
+menu
+snap start
+# Preferences: frame number in title, time format, black background
+cmd 36
+win #32770 * 5000
+wait 500
+check 1053 1
+check 1054 1
+click 1058
+check 1058 1
+check 1056 0
+click 1
+nowin #32770 * 5000
+pop
+wait 1500
+dump
+snap prefs
+# Go To 0:00:00.33 (time format now)
+cmd 37
+win #32770 * 5000
+wait 500
+dump
+click 2
+nowin #32770 * 5000
+pop
+# back to frames and default background
+cmd 36
+win #32770 * 5000
+check 1053 0
+check 1054 0
+click 1055
+check 1055 1
+check 1058 0
+click 1
+nowin #32770 * 5000
+pop
+wait 1000
+# Go To 5
+cmd 37
+win #32770 * 5000
+settext 1070 5
+click 1
+nowin #32770 * 5000
+pop
+wait 1500
+snap goto5
+# select 5..10, copy, cut, go to 0, paste
+cmd 38
+win #32770 * 5000
+click 221
+settext 223 5
+settext 224 10
+click 1
+nowin #32770 * 5000
+pop
+cmd 769
+wait 2000
+clip copy
+cmd 768
+wait 2000
+childclass StatusClass
+dump
+pop
+cmd 37
+win #32770 * 5000
+settext 1070 0
+click 1
+nowin #32770 * 5000
+pop
+cmd 770
+wait 3000
+childclass StatusClass
+dump
+pop
+snap paste
+# zoom 2x and back
+cmd 43
+wait 2000
+dump
+snap zoom2
+cmd 42
+wait 2000
+# convert frame rate to 10 and look at the statistics
+cmd 66
+win #32770 * 5000
+settext 180 10
+click 1
+wait 3000
+toplist
+nowin #32770 * 10000
+pop
+cmd 67
+win #32770 * 5000
+wait 3000
+dump
+click 1
+nowin #32770 * 5000
+pop
+# resize to 80x60
+cmd 62
+win #32770 * 5000
+settext 1060 80
+settext 1061 60
+click 1
+wait 4000
+toplist
+nowin #32770 * 10000
+pop
+win VidEdit * 1000
+dump
+snap resize
+# crop to 10,10 60x40
+cmd 61
+win #32770 * 5000
+settext 190 10
+settext 191 10
+settext 192 60
+settext 193 40
+wait 500
+snap cropdlg
+click 1
+wait 4000
+toplist
+nowin #32770 * 10000
+pop
+win VidEdit * 1000
+dump
+snap crop
+close
+wait 2000
+toplist
+win #32770 * 3000
+dump
+click 7
+wait 2000
+toplist
+ini mmtools.ini VidEdit FrameNumInTitle
+exit

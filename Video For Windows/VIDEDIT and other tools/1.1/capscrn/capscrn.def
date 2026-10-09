@@ -1,0 +1,36 @@
+; capscrn.def - reconstructed from the NE header of CAPSCRN.EXE
+;
+; Segment order and attributes as in the binary:
+;   seg1 CODE  MOVEABLE PRELOAD   0x1A0E  capscrn.c
+;   seg2 CODE  MOVEABLE PRELOAD   0x05A8  arrow.c
+;   seg3 CODE  MOVEABLE PRELOAD   0x0870  intro.c
+;   seg4 CODE  MOVEABLE PRELOAD   0x2193  Microsoft C runtime (entry point seg4:001A)
+;   seg5 DATA  MOVEABLE PRELOAD MULTIPLE  0x128E  DGROUP
+;
+; The description field holds the build path of the original.
+
+NAME        CAPSCRN
+DESCRIPTION 'dos\usa\capscrn.exe'
+EXETYPE     WINDOWS 3.1
+PROTMODE
+STUB        'WINSTUB.EXE'
+
+CODE        MOVEABLE PRELOAD
+DATA        MOVEABLE MULTIPLE PRELOAD
+HEAPSIZE    4096
+STACKSIZE   6144
+
+EXPORTS
+    WndProc             @1                  ; non-resident name
+    ArrowControlProc    @2 RESIDENTNAME
+    HelpMsgFilter       @3 RESIDENTNAME
+    ___EXPORTEDSTUB     @4 RESIDENTNAME     ; from the Microsoft C runtime
+    IntroWndProc        @5 RESIDENTNAME
+
+IMPORTS
+    ; by ordinal in the binary, besides KERNEL, USER and GDI:
+    ; AVICAP.2 capCreateCaptureWindow, AVICAP.3 capGetDriverDescription
+    ; COMMDLG.1 GetOpenFileName
+    ; MMSYSTEM.2 sndPlaySound
+    ; MSACM.7 acmGetVersion, 8 acmMetrics, 40 acmFormatChoose, 41 acmFormatDetails
+    ; WIN87EM.1 __FPMATH

@@ -1,0 +1,320 @@
+# videdit_s.uit - uitest script for VIDEDIT.EXE with SAMPLE.AVI (Cinepak)
+#
+# Needs C:\TEST\SAMPLE.AVI from the VfW 1.1 disks.  Only key frames and
+# frames reached in a fixed order are captured: what a Cinepak delta frame
+# looks like depends on which frames were decompressed before, and with
+# the default fast frame update on timing.
+# ---- Go To, Set Selection, Copy, Delete, Undo
+iniset mmtools.ini VidEdit - -
+run C:\TEST\VIDEDIT.EXE C:\TEST\SAMPLE.AVI
+win VidEdit * 15000
+wait 3000
+# Go To frame 50
+cmd 37
+win #32770 * 5000
+wait 500
+dump
+childclass aviframebox
+dump
+pop
+settext 1070 50
+click 1
+nowin #32770 * 5000
+pop
+wait 2000
+childclass StatusClass
+dump
+pop
+snap frame50
+# Set Selection 10..19
+cmd 38
+win #32770 * 5000
+wait 500
+dump
+click 221
+settext 223 10
+settext 224 19
+wait 300
+dump
+click 1
+nowin #32770 * 5000
+pop
+wait 1000
+childclass StatusClass
+dump
+pop
+snap sel
+# copy, delete, undo
+cmd 769
+wait 3000
+clip copy10
+cmd 31
+wait 3000
+childclass StatusClass
+dump
+pop
+menu
+cmd 772
+wait 3000
+childclass StatusClass
+dump
+pop
+toplist
+close
+wait 3000
+toplist
+win #32770 * 3000
+dump
+click 7
+wait 2000
+toplist
+
+# ---- every dialog of the Video menu and some others, opened and cancelled
+run C:\TEST\VIDEDIT.EXE C:\TEST\SAMPLE.AVI
+win VidEdit * 15000
+wait 3000
+log ---- command 66
+cmd 66
+wait 2000
+toplist
+win #32770 * 5000
+dump
+snap d66
+click 2
+wait 1000
+toplist
+win #32770 * 500
+dump
+click 2
+wait 1000
+pop
+pop
+win VidEdit * 1000
+log ---- command 62
+cmd 62
+wait 2000
+toplist
+win #32770 * 5000
+dump
+snap d62
+click 2
+wait 1000
+toplist
+win #32770 * 500
+dump
+click 2
+wait 1000
+pop
+pop
+win VidEdit * 1000
+log ---- command 61
+cmd 61
+wait 2000
+toplist
+win #32770 * 5000
+dump
+snap d61
+click 2
+wait 1000
+toplist
+win #32770 * 500
+dump
+click 2
+wait 1000
+pop
+pop
+win VidEdit * 1000
+log ---- command 69
+cmd 69
+wait 2000
+toplist
+win #32770 * 5000
+dump
+snap d69
+click 2
+wait 1000
+toplist
+win #32770 * 500
+dump
+click 2
+wait 1000
+pop
+pop
+win VidEdit * 1000
+log ---- command 64
+cmd 64
+wait 2000
+toplist
+win #32770 * 5000
+dump
+snap d64
+click 2
+wait 1000
+toplist
+win #32770 * 500
+dump
+click 2
+wait 1000
+pop
+pop
+win VidEdit * 1000
+log ---- command 30
+cmd 30
+wait 2000
+toplist
+win #32770 * 5000
+dump
+snap d30
+click 2
+wait 1000
+toplist
+win #32770 * 500
+dump
+click 2
+wait 1000
+pop
+pop
+win VidEdit * 1000
+log ---- command 63
+cmd 63
+wait 2000
+toplist
+win #32770 * 5000
+dump
+snap d63
+click 2
+wait 1000
+toplist
+win #32770 * 500
+dump
+click 2
+wait 1000
+pop
+pop
+win VidEdit * 1000
+log ---- command 68
+cmd 68
+wait 2000
+toplist
+win #32770 * 5000
+dump
+snap d68
+click 2
+wait 1000
+toplist
+win #32770 * 500
+dump
+click 2
+wait 1000
+pop
+pop
+win VidEdit * 1000
+log ---- command 16
+cmd 16
+wait 2000
+toplist
+win #32770 * 5000
+dump
+snap d16
+click 2
+wait 1000
+toplist
+win #32770 * 500
+dump
+click 2
+wait 1000
+pop
+pop
+win VidEdit * 1000
+log ---- command 17
+cmd 17
+wait 2000
+toplist
+win #32770 * 5000
+dump
+snap d17
+click 2
+wait 1000
+toplist
+win #32770 * 500
+dump
+click 2
+wait 1000
+pop
+pop
+win VidEdit * 1000
+log ---- command 12
+cmd 12
+wait 2000
+toplist
+win #32770 * 5000
+dump
+snap d12
+click 2
+wait 1000
+toplist
+win #32770 * 500
+dump
+click 2
+wait 1000
+pop
+pop
+win VidEdit * 1000
+close
+wait 3000
+toplist
+
+# ---- keep frames 0..4, save as uncompressed AVI
+run C:\TEST\VIDEDIT.EXE C:\TEST\SAMPLE.AVI
+win VidEdit * 15000
+wait 3000
+# keep frames 0..29 only: select 30..104 and delete
+cmd 38
+win #32770 * 5000
+click 221
+settext 223 5
+settext 224 105
+click 1
+nowin #32770 * 5000
+pop
+cmd 31
+wait 3000
+childclass StatusClass
+dump
+pop
+# compression: full frames (uncompressed)
+cmd 60
+win #32770 * 5000
+wait 500
+cbsel 133 1
+wait 500
+dump
+click 1
+nowin #32770 * 5000
+pop
+# Save As
+cmd 14
+win #32770 * 5000
+wait 1000
+dump
+settext 1152 C:\TEST\OUT1.AVI
+click 1
+wait 3000
+pop
+win #32770 Save 20000
+dump
+click 1
+pop
+nowin #32770 * 90000
+wait 2000
+toplist
+win VidEdit * 1000
+childclass StatusClass
+dump
+pop
+avi C:\TEST\OUT1.AVI
+file C:\TEST\OUT1.AVI
+close
+wait 3000
+toplist
+exit

@@ -1,0 +1,39 @@
+; videdit.def - reconstructed from the NE header of VIDEDIT.EXE
+;
+; Segment order and attributes as in the binary (all code DISCARDABLE):
+;   seg1  CODE PRELOAD  0x5ED1  application code + Microsoft C runtime
+;                               (entry point seg1:2FF6)
+;   seg2  CODE PRELOAD  0x1356    seg3  CODE PRELOAD  0x016E
+;   seg4  CODE PRELOAD  0x4B2A    seg5  CODE PRELOAD  0x805E
+;   seg6  CODE          0x70AC    seg7  CODE          0x1ACA
+;   seg8  CODE          0x008F (no relocations)
+;   seg9  CODE          0x024F    seg10 CODE          0x0059
+;   seg11 CODE          0x1481    seg12 CODE          0x1BBE
+;   seg13 CODE          0x047E    seg14 CODE          0x01E0
+;   seg15 CODE          0x0065    seg16 CODE          0x3452
+;   seg17 CODE          0x06C9    seg18 CODE          0x0BFA
+;   seg19 CODE          0x0898    seg20 CODE          0x05ED
+;   seg21 DATA PRELOAD MULTIPLE  0x327A  DGROUP
+;
+; Nothing but the runtime's ___EXPORTEDSTUB is exported: the window and
+; dialog procedures are called with DS already set to DGROUP.
+
+NAME        VIDEDIT
+DESCRIPTION 'Multimedia Windows AVI File Editor'
+EXETYPE     WINDOWS 3.1
+PROTMODE
+STUB        'WINSTUB.EXE'
+
+CODE        MOVEABLE DISCARDABLE LOADONCALL
+DATA        MOVEABLE MULTIPLE PRELOAD
+HEAPSIZE    5120
+STACKSIZE   16384
+
+EXPORTS
+    ___EXPORTEDSTUB     @1 RESIDENTNAME     ; from the Microsoft C runtime
+
+IMPORTS
+    ; by ordinal in the binary, besides KERNEL, USER, GDI, COMMDLG,
+    ; MMSYSTEM and SHELL:
+    ; MEDIAMAN, WRKBENCH, WINCOM and MSVIDEO, see ../common/watcom
+    ; WIN87EM.1 __FPMATH

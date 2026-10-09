@@ -1,0 +1,69 @@
+; vidcap.def - reconstructed from the NE header of VIDCAP.EXE
+;
+; Segment order and attributes as in the binary:
+;   seg1 CODE  MOVEABLE PRELOAD DISCARDABLE  0x8D6E  misc.c intro.c path.c arrow.c
+;                                                    vidcap.c dosutil.c video.c file.c
+;                                                    util.c, Microsoft C runtime
+;                                                    (5550-8CDB, entry point 1:5556),
+;                                                    muldiv.c
+;   seg2 CODE  MOVEABLE PRELOAD DISCARDABLE  0x1614  profile.c help.c init.c
+;   seg3 CODE  MOVEABLE PRELOAD DISCARDABLE  0x32CC  frame.c show.c ctrl.c toolbar.c
+;   seg4 CODE  MOVEABLE DISCARDABLE          0x0069  arrowini.c
+;   seg5 CODE  MOVEABLE DISCARDABLE          0x162A  dialogs.c
+;   seg6 CODE  MOVEABLE DISCARDABLE          0x1E56  dibmap.c
+;   seg7 CODE  MOVEABLE DISCARDABLE          0x2B86  capavi.c status.c
+;   seg8 CODE  MOVEABLE DISCARDABLE          0x2FF8  capframe.c mcicap.c average.c
+;   seg9 DATA  MOVEABLE PRELOAD MULTIPLE     0x3072  DGROUP (data.c and the rest)
+
+NAME        VIDCAP
+DESCRIPTION 'Video Capture app'
+EXETYPE     WINDOWS 3.1
+PROTMODE
+STUB        'WINSTUB.EXE'
+
+CODE        MOVEABLE DISCARDABLE LOADONCALL
+DATA        MOVEABLE MULTIPLE PRELOAD
+HEAPSIZE    4096
+STACKSIZE   8192
+
+SEGMENTS
+    SEG1_TEXT   PRELOAD
+    SEG2_TEXT   PRELOAD
+    SEG3_TEXT   PRELOAD
+    SEG4_TEXT
+    SEG5_TEXT
+    SEG6_TEXT
+    SEG7_TEXT
+    SEG8_TEXT
+
+EXPORTS
+    SetFileDlgHook      @1  RESIDENTNAME
+    CapPalDlgProc       @2  RESIDENTNAME
+    StatusWndProc       @3  RESIDENTNAME
+    EditWndProc         @4  RESIDENTNAME
+    ArrowControlProc    @5  RESIDENTNAME
+    toolbarWndProc      @6  RESIDENTNAME
+    ShowWndProc         @7  RESIDENTNAME
+    HelpMsgFilter       @8  RESIDENTNAME
+    RLMeterProc         @9  RESIDENTNAME
+    CtrlWndProc         @10 RESIDENTNAME
+    ___EXPORTEDSTUB     @11 RESIDENTNAME    ; from the Microsoft C runtime
+    fnText              @12 RESIDENTNAME
+    IntroWndProc        @13 RESIDENTNAME
+    CapFrameDlgProc     @14 RESIDENTNAME
+
+IMPORTS
+    ; by ordinal in the binary, besides KERNEL, USER and GDI:
+    ; MSVIDEO.21 videoGetErrorText, 28 videoOpen, 29 videoClose, 30 videoDialog,
+    ;   31 videoFrame, 32 videoConfigure, 34 videoGetChannelCaps, 35 videoUpdate,
+    ;   40 videoStreamAddBuffer, 41 videoStreamFini, 42 videoStreamGetError,
+    ;   44 videoStreamInit, 46 videoStreamPrepareHeader, 47 videoStreamReset,
+    ;   49 videoStreamStart, 50 videoStreamStop, 51 videoStreamUnprepareHeader,
+    ;   60 videoMessage, 102 DrawDibOpen, 103 DrawDibClose, 106 DrawDibDraw,
+    ;   108 DrawDibGetPalette, 112 DrawDibRealize, 241 ICImageDecompress,
+    ;   242 ICCompressorChoose, 243 ICCompressorFree, 244 ICSeqCompressFrameStart,
+    ;   245 ICSeqCompressFrameEnd, 246 ICSeqCompressFrame
+    ; COMMDLG: GetOpenFileName, GetSaveFileName, GetFileTitle
+    ; MMSYSTEM: mmio*, waveIn*, waveOutGetNumDevs, mciSendCommand, mciSendString,
+    ;   mciGetErrorString, timeGetTime
+    ; WIN87EM.1 __FPMATH

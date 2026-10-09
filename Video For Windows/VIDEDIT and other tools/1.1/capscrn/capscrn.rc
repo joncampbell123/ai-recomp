@@ -1,0 +1,126 @@
+/*
+ * capscrn.rc - resources reconstructed from CAPSCRN.EXE
+ *
+ * The memory options are those of the binary.  The DLGINCLUDE resource
+ * names the dialog editor's include file of the original source.
+ */
+
+#include <windows.h>
+#include <ver.h>
+#include "capscrn.h"
+
+CAPSCRN ICON LOADONCALL MOVEABLE PURE DISCARDABLE "res/icon_capscrn.ico"
+
+
+CAPSCRN ACCELERATORS PRELOAD MOVEABLE PURE
+BEGIN
+    "^C", IDM_COPYFRAME, ASCII
+    VK_F1, IDM_HELP, VIRTKEY
+END
+
+IDD_PREFERENCES DIALOG LOADONCALL MOVEABLE PURE DISCARDABLE 12, 16, 132, 150
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL "Frame &Rate:", -1, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 6, 16, 44, 10
+    CONTROL "", IDC_FRAMERATE, "EDIT", ES_AUTOHSCROLL | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 52, 14, 16, 12
+    CONTROL "", IDC_FRAMERATEARROW, "comarrow", WS_CHILD | WS_VISIBLE | WS_BORDER, 68, 14, 6, 12
+    CONTROL "Audio Settings", IDC_AUDIOGROUP, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE, 2, 36, 128, 50
+    CONTROL "Capture &Audio", IDC_AUDIO, "BUTTON", BS_AUTOCHECKBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 8, 48, 64, 10
+    CONTROL "C&hange...", IDC_AUDIOCHANGE, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 86, 52, 40, 14
+    CONTROL "Format:", IDC_AUDIOFORMATLABEL, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 60, 34, 8
+    CONTROL "", IDC_AUDIOFORMAT, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE | WS_GROUP, 8, 72, 118, 12
+    CONTROL "Stop Recording Key", IDC_STOPKEYGROUP, "BUTTON", BS_GROUPBOX | WS_CHILD | WS_VISIBLE, 2, 90, 128, 30
+    CONTROL "&Ctrl +", IDC_HOTCTRL, "BUTTON", BS_AUTOCHECKBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 8, 104, 32, 10
+    CONTROL "&Shift +", IDC_HOTSHIFT, "BUTTON", BS_AUTOCHECKBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 50, 104, 36, 10
+    CONTROL "", IDC_HOTKEY, "COMBOBOX", CBS_DROPDOWNLIST | WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_TABSTOP, 94, 102, 30, 52
+    CONTROL "&Increment Filename", IDC_INCFILE, "BUTTON", BS_AUTOCHECKBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 8, 124, 90, 10
+    CONTROL "&Keep on top", IDC_ONTOP, "BUTTON", BS_AUTOCHECKBOX | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 8, 138, 78, 10
+    CONTROL "OK", 1, "BUTTON", BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 86, 4, 40, 14
+    CONTROL "Cancel", 2, "BUTTON", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 86, 20, 40, 14
+END
+
+STRINGTABLE LOADONCALL MOVEABLE PURE DISCARDABLE
+BEGIN
+    IDS_ERR_REGCLASS, "Error registering window class."
+    IDS_ERR_CREATEWINDOW, "Window creation failed!"
+    IDS_ERR_NODRIVER, "Unable to load the capture driver.  The driver is either already in use, out of memory, or is not installed."
+    IDS_ERR_CANTINCREMENT, "Cannot increment capture filename."
+    IDS_ERR_CAPSETUP, "Error setting up for capture."
+    IDS_ERR_CAPDISKFULL, "Error during capture, disk may be full."
+    IDS_ERR_MAXFRAMES, "Maximum frame count exceeded."
+    IDS_ERR_NOMEM, "Out of memory."
+    IDS_ERR_NOEDITOR, "Unable to start video editor."
+    IDS_ERR_RUNNING, "Capscrn is already running."
+    IDS_OVERWRITE, "Overwrite file %s?"
+END
+
+STRINGTABLE LOADONCALL MOVEABLE PURE DISCARDABLE
+BEGIN
+    IDS_SETFILE_TITLE, "Set Capture File"
+    IDS_DEFFILE, "c:\\cap0000.avi"
+    IDS_FILTER, "Microsoft AVI!*.avi!All Files!*.*!!"
+    IDS_DEFEXT, "AVI"
+    IDS_DEFAUDIOFORMAT, "11 kHz. 8 bit, Mono"
+END
+
+STRINGTABLE LOADONCALL MOVEABLE PURE DISCARDABLE
+BEGIN
+    IDS_INTRO_NAME, "CapScrn"
+    IDS_INTRO_COPYRIGHT, "Copyright\251 1990-1993 Microsoft Corporation"
+    IDS_INTRO_VERSION, "1.1"
+    IDS_INTRO_STOPKEY, "To stop capture, press:"
+    IDS_INTRO_CTRL, "Ctrl + "
+    IDS_INTRO_SHIFT, "Shift + "
+END
+
+STRINGTABLE LOADONCALL MOVEABLE PURE DISCARDABLE
+BEGIN
+    IDS_MENU_SETFILE, "Set Capture &File..."
+    IDS_MENU_SETWINDOW, "Set Capture &Window..."
+    IDS_MENU_PREFERENCES, "&Preferences..."
+    IDS_MENU_CAPTURE, "C&apture!"
+    IDS_MENU_COPYFRAME, "Cop&y Frame\tCtrl+C"
+    IDS_MENU_EDIT, "&Edit Captured Video..."
+    IDS_MENU_HELP, "&Help\tF1"
+END
+
+STRINGTABLE LOADONCALL MOVEABLE PURE DISCARDABLE
+BEGIN
+    IDS_CAPSTOPPED, "Capture Stopped"
+    IDS_PALCHANGE, "A palette change occurred so the current capture has been stopped.  If possible, change to a non-palettized display."
+    IDS_CLOSEFIRST, "Close the application before exiting Windows."
+END
+
+DLGINCLUDE RCDATA LOADONCALL MOVEABLE PURE DISCARDABLE "res/rcdata_dlginclude.bin"
+IDB_INTRO DIB PRELOAD MOVEABLE PURE DISCARDABLE "res/dib_151.bin"
+
+VS_VERSION_INFO VERSIONINFO LOADONCALL MOVEABLE PURE
+FILEVERSION     1,10,0,176
+PRODUCTVERSION  1,10,0,176
+FILEFLAGSMASK   0x0030003FL
+FILEFLAGS       0x0L
+FILEOS          0x00010001L
+FILETYPE        0x1L
+FILESUBTYPE     0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName", "Microsoft Corporation\000"
+            VALUE "FileDescription", "AVI Screen Capture\000"
+            VALUE "FileVersion", "1.1\000"
+            VALUE "InternalName", "capscrn.exe\000"
+            VALUE "LegalCopyright", "Copyright \251 Microsoft Corp. 1992-1993\000"
+            VALUE "OriginalFilename", "capscrn.exe\000"
+            VALUE "ProductName", "Microsoft Video for Windows\000"
+            VALUE "ProductVersion", "1.1\000"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 0x04E4
+    END
+END

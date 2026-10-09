@@ -1,0 +1,162 @@
+# videdit_b.uit - uitest script for VIDEDIT.EXE, part B
+#
+# Needs C:\TEST\TEST8.AVI (mkavi.py) and VIDEDIT.HLP.  Video Format,
+# Create Palette, Paste Palette, Synchronize, Compression Options, Save As
+# (uncompressed), Extract, New, Insert, Load into Memory, About, Help.
+# The saved files' AVI main headers have four reserved DWORDs that the
+# MediaMan AVI writer leaves uninitialised; uidiff.py masks them.
+iniset mmtools.ini VidEdit - -
+run C:\TEST\VIDEDIT.EXE C:\TEST\TEST8.AVI
+win VidEdit * 15000
+wait 3000
+# convert to 24 bit
+cmd 69
+win #32770 * 5000
+click 192
+check 192 1
+check 190 0
+click 1
+wait 5000
+toplist
+nowin #32770 * 20000
+pop
+win VidEdit * 1000
+childclass StatusClass
+dump
+pop
+snap fmt24
+# create a 64-colour palette from all frames
+cmd 64
+win #32770 * 5000
+settext 155 64
+click 1
+wait 8000
+toplist
+win #32770 * 20000
+dump
+click 1
+nowin #32770 * 5000
+pop
+clip palclip
+# paste it into all frames with remapping
+cmd 30
+win #32770 * 5000
+dump
+click 1
+wait 8000
+toplist
+nowin #32770 * 30000
+pop
+win VidEdit * 1000
+snap palpasted
+# synchronize: audio 100 ms later
+cmd 63
+win #32770 * 5000
+settext 152 100
+click 1
+wait 2000
+nowin #32770 * 5000
+pop
+# save as uncompressed
+cmd 60
+win #32770 * 5000
+cbsel 133 1
+click 1
+nowin #32770 * 5000
+pop
+cmd 14
+win #32770 * 5000
+wait 1000
+settext 1152 C:\TEST\OUT2.AVI
+click 1
+wait 3000
+toplist
+win #32770 Save 5000
+dump
+click 1
+pop
+nowin #32770 * 90000
+wait 2000
+toplist
+win VidEdit * 1000
+dump
+avi C:\TEST\OUT2.AVI
+file C:\TEST\OUT2.AVI
+# extract frames 2..6
+cmd 38
+win #32770 * 5000
+click 221
+settext 223 2
+settext 224 6
+click 1
+nowin #32770 * 5000
+pop
+cmd 17
+win #32770 * 5000
+wait 1000
+dump
+settext 1152 C:\TEST\EXT.AVI
+click 1
+wait 3000
+toplist
+win #32770 Save 3000
+click 1
+pop
+nowin #32770 * 60000
+wait 2000
+win VidEdit * 1000
+avi C:\TEST\EXT.AVI
+file C:\TEST\EXT.AVI
+# new, then insert the extracted file
+cmd 11
+wait 2000
+toplist
+win #32770 * 2000
+dump
+click 7
+pop
+wait 2000
+win VidEdit * 1000
+dump
+cmd 16
+win #32770 * 5000
+wait 1000
+dump
+settext 1152 C:\TEST\EXT.AVI
+click 1
+wait 5000
+toplist
+win VidEdit * 1000
+childclass StatusClass
+dump
+pop
+snap inserted
+# load into memory
+cmd 65
+wait 5000
+toplist
+menu
+# about and help
+cmd 70
+win WorkbenchIntro * 5000
+wait 1000
+snap about
+close
+nowin WorkbenchIntro * 5000
+pop
+cmd 71
+win MS_WINHELP * 10000
+wait 2000
+dump
+close
+nowin MS_WINHELP * 10000
+pop
+close
+wait 2000
+toplist
+win #32770 * 3000
+dump
+click 7
+wait 2000
+toplist
+exit

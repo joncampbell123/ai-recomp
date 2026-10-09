@@ -1,0 +1,364 @@
+# vidcap.uit - uitest script for VIDCAP.EXE (see ../../../common/watcom/uitest/uitest.c)
+#
+# Run once with the original and once with the rebuild, each in a fresh
+# copy of Windows 3.11 with Video for Windows 1.1, from C:\TEST, with
+# VIDCAP.HLP and VIDEDIT.EXE next to VIDCAP.EXE.  The capture source is
+# the screen capture driver SCRNCAP.DRV, set up as [drivers] MSVideo.
+# Capture/Video stops by itself after a 3 second time limit.
+
+# no saved settings; the screen capture driver as capture device 0
+iniset mmtools.ini VidCap - -
+iniset system.ini drivers MSVideo scrncap.drv
+
+# the start-up box is gone before WinExec returns, so it can't be seen
+run C:\TEST\VIDCAP.EXE
+win VidCap * 15000
+wait 1000
+dump
+menu
+snap main
+
+# Preferences: defaults, then change everything
+cmd 522
+win #32770 * 10000
+wait 500
+dump
+snap prefs1
+# F1 in a dialog goes through the WH_MSGFILTER hook to WinHelp
+key 0x70
+wait 3000
+toplist
+closeclass MS_WINHELP
+wait 2000
+check 840 0
+check 843 0
+check 846 0
+check 848 1
+check 850 0
+check 851 1
+click 1
+nowin #32770 * 5000
+pop
+wait 1000
+dump
+snap main2
+# again: what was kept; status bar and centring back on
+cmd 522
+win #32770 * 10000
+wait 500
+dump
+check 840 1
+check 843 1
+check 848 0
+check 845 1
+click 1
+nowin #32770 * 5000
+pop
+wait 1000
+dump
+
+# Audio Format: defaults, then 16 bit stereo 22 kHz
+cmd 540
+win #32770 * 10000
+wait 500
+dump
+snap audio1
+# Level... (wave input of the headless setup)
+click 707
+wait 3000
+toplist
+win #32770 * 5000
+dump
+close
+wait 2000
+pop
+toplist
+check 700 0
+check 701 1
+check 702 0
+check 703 1
+check 704 0
+check 705 1
+click 1
+nowin #32770 * 5000
+pop
+wait 500
+cmd 540
+win #32770 * 10000
+wait 500
+dump
+click 2
+nowin #32770 * 5000
+pop
+
+# Video Format is the driver's dialog; Video Source and Video Display
+# do nothing with this driver
+cmd 542
+win #32770 * 10000
+wait 1000
+dump
+snap vformat
+click 2
+nowin #32770 * 5000
+pop
+wait 500
+cmd 541
+wait 1500
+toplist
+cmd 543
+wait 1500
+toplist
+
+# Video Compression (ICCompressorChoose)
+cmd 546
+win #32770 * 10000
+wait 500
+dump
+snap compress
+click 2
+nowin #32770 * 5000
+pop
+
+# Set Capture File: a new file, so Set File Size comes up
+cmd 502
+win #32770 * 10000
+wait 1500
+dump
+snap setfile
+settext 1152 C:\TEST\CAPTURE.AVI
+click 1
+wait 1500
+toplist
+win #32770 * 10000
+wait 1000
+dump
+snap filesize
+settext 725 1
+click 1
+nowin #32770 * 10000
+pop
+pop
+wait 2000
+win VidCap * 5000
+dump
+file C:\TEST\CAPTURE.AVI
+
+# Capture Frames: two frames
+cmd 561
+win #32770 * 10000
+wait 1000
+dump
+snap capframes
+click 601
+wait 2000
+click 601
+wait 2000
+dump
+click 2
+nowin #32770 * 10000
+pop
+wait 2000
+toplist
+win VidCap * 5000
+dump
+avi C:\TEST\CAPTURE.AVI
+
+# Capture Single Frame, then save it, its palette, and copy it
+cmd 560
+wait 2000
+snap single
+cmd 506
+win #32770 * 10000
+wait 1500
+dump
+settext 1152 C:\TEST\FRAME.DIB
+click 1
+nowin #32770 * 10000
+pop
+wait 1000
+file C:\TEST\FRAME.DIB
+cmd 505
+win #32770 * 10000
+wait 1500
+dump
+settext 1152 C:\TEST\TEST.PAL
+click 1
+nowin #32770 * 10000
+pop
+wait 1000
+file C:\TEST\TEST.PAL
+cmd 520
+wait 1000
+clip copy
+cmd 521
+wait 1000
+cmd 501
+win #32770 * 10000
+wait 1500
+dump
+settext 1152 C:\TEST\TEST.PAL
+click 1
+nowin #32770 * 10000
+pop
+wait 1000
+toplist
+
+# Capture Palette: this driver has no RGB555 format, so it fails
+cmd 563
+win #32770 * 10000
+wait 1000
+dump
+snap cappal
+click 2
+nowin #32770 * 10000
+pop
+wait 1000
+toplist
+
+# Capture Video: the dialog, MCI Settings (opened with no MCI devices,
+# with its button disabled), then a 3 second capture without audio.  The
+# screen capture driver delivers no frames to VidCap's streaming capture
+# in this setup (the original's too), so it ends with "No frames
+# captured" and an AVI without frames.
+win VidCap * 5000
+cmd 562
+win #32770 * 10000
+wait 1000
+dump
+snap capseq
+click 629
+wait 1500
+toplist
+win #32770 * 10000
+wait 1000
+dump
+snap mci
+click 2
+wait 1500
+pop
+toplist
+check 611 1
+settext 613 3
+check 614 0
+click 1
+wait 2000
+toplist
+win #32770 VidCap 15000
+wait 1000
+dump
+click 1
+wait 15000
+toplist
+win #32770 * 2000
+dump
+close
+wait 2000
+pop
+toplist
+win VidCap * 5000
+dump
+avi C:\TEST\CAPTURE.AVI
+
+# again, captured to memory (global memory buffers, a DOS bounce buffer)
+cmd 562
+win #32770 * 10000
+wait 1000
+check 627 0
+check 628 1
+click 1
+wait 2000
+toplist
+win #32770 VidCap 15000
+wait 1000
+click 1
+wait 15000
+toplist
+win #32770 * 2000
+dump
+close
+wait 2000
+pop
+toplist
+win VidCap * 5000
+dump
+avi C:\TEST\CAPTURE.AVI
+
+# Save Captured Video As
+cmd 504
+win #32770 * 10000
+wait 1500
+dump
+settext 1152 C:\TEST\SAVED.AVI
+click 1
+wait 8000
+toplist
+avi C:\TEST\SAVED.AVI
+
+# Preview on and off
+win VidCap * 5000
+cmd 544
+wait 2000
+childclass StatusClass
+dump
+pop
+cmd 544
+wait 1000
+
+# About
+cmd 585
+win VfWIntroBox * 10000
+wait 1000
+dump
+snap about
+click 99
+nowin VfWIntroBox * 10000
+pop
+
+# Help
+cmd 580
+win MS_WINHELP * 10000
+wait 2000
+dump
+close
+nowin MS_WINHELP * 10000
+pop
+
+# Edit Captured Video starts VidEdit with the capture file
+win VidCap * 5000
+cmd 503
+wait 10000
+toplist
+closeclass VidEdit
+wait 3000
+toplist
+
+# quit, then the settings
+win VidCap * 5000
+cmd 500
+nowin VidCap * 10000
+pop
+ini mmtools.ini VidCap CapFile
+ini mmtools.ini VidCap LiveWindow
+ini mmtools.ini VidCap OverlayWindow
+ini mmtools.ini VidCap CtrlXPos
+ini mmtools.ini VidCap CtrlYPos
+ini mmtools.ini VidCap CtrlWidth
+ini mmtools.ini VidCap CtrlHeight
+ini mmtools.ini VidCap CenterImage
+ini mmtools.ini VidCap StatusBar
+ini mmtools.ini VidCap ToolBar
+ini mmtools.ini VidCap BackgroundColor
+ini mmtools.ini VidCap StepCaptureAt2x
+ini mmtools.ini VidCap AverageFrames
+ini mmtools.ini VidCap IndexSizeInKFrames
+ini mmtools.ini VidCap Yield
+ini mmtools.ini VidCap Frequency
+ini mmtools.ini VidCap Channels
+ini mmtools.ini VidCap Bits
+ini mmtools.ini VidCap Sound
+ini mmtools.ini VidCap MCIDevice
+ini mmtools.ini VidCap TimeLimit
+ini mmtools.ini VidCap LimitEnabled
+ini mmtools.ini VidCap MicroSecPerFrame
+ini mmtools.ini VidCap CaptureToMemory
+file C:\TEST\CAPTURE.AVI

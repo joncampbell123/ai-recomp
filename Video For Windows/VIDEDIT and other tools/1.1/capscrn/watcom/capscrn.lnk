@@ -1,0 +1,41 @@
+# capscrn.lnk - wlink directives for the Open Watcom build of CAPSCRN.EXE
+#
+# Code segments follow the original NE layout (see ../capscrn.def):
+#   SEG1_TEXT capscrn.c   SEG2_TEXT arrow.c   SEG3_TEXT intro.c
+# The Watcom runtime takes the place of the Microsoft C runtime (seg4).
+
+system windows
+option modname=CAPSCRN
+option description 'dos\\usa\\capscrn.exe'
+option version=3.10
+option protmode
+option stack=6144
+option heapsize=4096
+option map=out/capscrn.map
+option resource=out/capscrn.res
+option quiet
+option packcode=0
+
+name out/capscrn.exe
+
+segment class 'CODE' preload moveable
+segment class 'DATA' preload moveable
+
+export WNDPROC.1
+export ARROWCONTROLPROC.2 resident
+export HELPMSGFILTER.3 resident
+export INTROWNDPROC.5 resident
+
+import CAPCREATECAPTUREWINDOW AVICAP.2
+import CAPGETDRIVERDESCRIPTION AVICAP.3
+import ACMGETVERSION MSACM.7
+import ACMMETRICS MSACM.8
+import ACMFORMATCHOOSE MSACM.40
+import ACMFORMATDETAILS MSACM.41
+
+library commdlg
+library mmsystem
+
+file out/capscrn.obj
+file out/arrow.obj
+file out/intro.obj

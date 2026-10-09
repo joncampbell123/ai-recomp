@@ -1,0 +1,159 @@
+# capscrn.uit - uitest script for CAPSCRN.EXE (see ../../../common/watcom/uitest/uitest.c)
+#
+# Run once with the original and once with the rebuild, each in a fresh
+# copy of Windows 3.11 with Video for Windows 1.1, from C:\TEST.  The
+# capture is stopped after a few seconds by posting WM_CAP_STOP to
+# CapScrn's capture window, so the number of frames varies.
+
+# no saved settings except the capture file
+iniset mmtools.ini CapScrn - -
+iniset mmtools.ini CapScrn File C:\TEST\CAP0000.AVI
+ini system.ini Drivers MSVideo9
+
+run C:\TEST\CAPSCRN.EXE
+win CSIntroBox * 15000
+wait 500
+snap intro
+dump
+lclick 20 20
+nowin CSIntroBox * 10000
+
+win CAPSCRN * 10000
+wait 500
+dump
+menu
+snap icon
+
+# Preferences: defaults, then change everything
+sys 1450
+win #32770 Preferences 10000
+wait 500
+dump
+snap prefs1
+settext 601 0.5
+check 610 0
+check 640 1
+check 641 1
+cbsel 642 26
+check 690 1
+check 691 0
+click 1
+nowin #32770 Preferences 5000
+pop
+wait 500
+
+# again, to see what was kept ('Z' comes back as F1, not in the list)
+sys 1450
+win #32770 Preferences 10000
+wait 500
+dump
+snap prefs2
+# frame rate 4, stop key Esc again (the abort key below), no Ctrl/Shift
+settext 601 4
+cbsel 642 0
+check 640 0
+check 641 0
+click 1
+nowin #32770 Preferences 5000
+pop
+wait 500
+
+# Set Capture File
+sys 1050
+win #32770 * 10000
+wait 2000
+dump
+settext 1152 C:\TEST\CAP0007.AVI
+gettext 1152
+wait 500
+click 1
+nowin #32770 * 5000
+pop
+wait 1000
+dump
+
+# capture for a few seconds
+sys 1500
+wait 6000
+childclass ClsCapWin
+post 0x444 0 0
+pop
+nowin #32770 * 1000
+wait 15000
+toplist
+win CAPSCRN * 5000
+dump
+avi C:\TEST\CAP0007.AVI
+
+# copy a frame
+sys 1480
+wait 2000
+clip frame
+
+# edit the capture (starts VidEdit)
+sys 1350
+wait 8000
+toplist
+closeclass VidEdit
+wait 3000
+toplist
+
+# Set Capture Window (the screen capture driver's dialog)
+win CAPSCRN * 5000
+sys 1400
+win #32770 * 10000
+wait 1000
+dump
+snap capwindow
+click 2
+nowin #32770 * 5000
+pop
+
+# Help
+sys 1600
+win MS_WINHELP * 10000
+wait 2000
+dump
+close
+nowin MS_WINHELP * 10000
+pop
+
+# a second copy refuses to start (MB_OK's button is IDCANCEL in Windows 3.1)
+run C:\TEST\CAPSCRN.EXE
+win #32770 * 10000
+wait 500
+dump
+click 2
+nowin #32770 * 5000
+pop
+
+# quit and look at the saved settings
+win CAPSCRN * 5000
+close
+nowin CAPSCRN * 10000
+ini mmtools.ini CapScrn fps
+ini mmtools.ini CapScrn HotKey
+ini mmtools.ini CapScrn Ctrl
+ini mmtools.ini CapScrn Shift
+ini mmtools.ini CapScrn Audio
+ini mmtools.ini CapScrn File
+ini mmtools.ini CapScrn IncFile
+ini mmtools.ini CapScrn OnTop
+ini system.ini Drivers MSVideo9
+
+# the intro box with Ctrl + Shift + F1 as the stop key (shown as "p")
+iniset mmtools.ini CapScrn HotKey 112
+iniset mmtools.ini CapScrn Ctrl 1
+iniset mmtools.ini CapScrn Shift 1
+run C:\TEST\CAPSCRN.EXE
+win CSIntroBox * 15000
+wait 500
+snap intro2
+lclick 20 20
+nowin CSIntroBox * 10000
+win CAPSCRN * 10000
+wait 500
+close
+nowin CAPSCRN * 10000
+ini mmtools.ini CapScrn HotKey
+exit

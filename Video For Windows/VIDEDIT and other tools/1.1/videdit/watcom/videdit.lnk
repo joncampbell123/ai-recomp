@@ -1,0 +1,27 @@
+# videdit.lnk - wlink directives for the Open Watcom build of VIDEDIT.EXE
+#
+# Code segments follow the original NE layout (see ../videdit.def and
+# sources.txt); the Watcom runtime takes the place of the Microsoft C
+# runtime in seg1.  imports.lnk has the imports by ordinal, and
+# out/files.lnk (written by build.sh) the object files.
+
+system windows
+option modname=VIDEDIT
+option description 'Multimedia Windows AVI File Editor'
+option version=3.10
+option protmode
+option stack=16384
+option heapsize=5120
+option map=out/videdit.map
+option resource=out/videdit.res
+option quiet
+option packcode=0
+
+name out/videdit.exe
+
+segment class 'CODE' moveable discardable
+segment class 'DATA' preload moveable
+
+library commdlg
+library mmsystem
+library shell
