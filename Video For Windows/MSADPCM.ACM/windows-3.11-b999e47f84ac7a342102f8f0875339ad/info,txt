@@ -1,0 +1,11 @@
+Typical installation location: C:\WINDOWS\SYSTEM\MSADPCM.ACM
+
+------------------------------------------------------
+
+Installation entry in SYSTEM.INI:
+
+[drivers]
+MSACM.msadpcm=msadpcm.acm
+
+------------------------------------------------------
+
